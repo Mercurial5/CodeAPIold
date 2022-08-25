@@ -1,5 +1,4 @@
 from translator import Interpreter
-from time_snap import Time
 
 from subprocess import Popen, PIPE
 
@@ -26,13 +25,12 @@ class Python(Interpreter):
         program = Popen(commands, shell=True, stderr=PIPE, stdin=PIPE, stdout=PIPE)
         program.stdin.flush()
 
-        time = Time()
-        time.snap()
+        super().snap_time()
 
         stdout = program.stdout.read().decode('utf-8')
         stderr = program.stderr.read().decode('utf-8')
 
-        time.snap()
+        print(super().snap_time())
 
         if stderr:
             return dict(status=False, error=stderr)

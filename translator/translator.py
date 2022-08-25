@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import uuid4
 import os
+import time
 
 
 class Translator(ABC):
@@ -22,6 +23,7 @@ class Translator(ABC):
         :param extension: str
         :param code: str
         """
+        self.time = 0
         self.language = language
         self.extension = extension
         self.filename = uuid4().hex
@@ -102,3 +104,16 @@ class Translator(ABC):
             return True
         except FileNotFoundError:
             return False
+
+    def snap_time(self) -> float:
+        """
+        This function return delta time between snaps
+
+        from:
+        https://stackoverflow.com/questions/45492786/find-execution-time-for-subprocess-popen-python
+
+        :return: delta time float
+        """
+        delta = self.time - time.time()
+        self.time = time.time()
+        return delta
