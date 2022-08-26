@@ -1,6 +1,7 @@
 from translator import Interpreter
 
 from subprocess import Popen, PIPE
+import sys
 
 
 class Python(Interpreter):
@@ -21,8 +22,8 @@ class Python(Interpreter):
         return dict(status=True)
 
     def run(self) -> dict:
-        commands = ['python', self.path_to_file]
-        program = Popen(commands, shell=True, stderr=PIPE, stdin=PIPE, stdout=PIPE)
+        commands = [sys.executable, self.path_to_file]
+        program = Popen(commands, stderr=PIPE, stdin=PIPE, stdout=PIPE)
         program.stdin.flush()
 
         stdout = program.stdout.read().decode('utf-8')
