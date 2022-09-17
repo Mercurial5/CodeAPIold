@@ -21,15 +21,8 @@ class Python(Interpreter):
         self.is_secure = True
         return dict(status=True)
 
-    def run(self) -> dict:
+    def run(self) -> Popen:
         commands = [sys.executable, self.path_to_file]
-        program = Popen(commands, stderr=PIPE, stdin=PIPE, stdout=PIPE)
-        program.stdin.flush()
+        process = Popen(commands, stderr=PIPE, stdin=PIPE, stdout=PIPE)
 
-        stdout = program.stdout.read().decode('utf-8')
-        stderr = program.stderr.read().decode('utf-8')
-
-        if stderr:
-            return dict(status=False, error=stderr)
-
-        return dict(status=True, output=stdout)
+        return process

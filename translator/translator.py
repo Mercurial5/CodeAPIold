@@ -57,15 +57,9 @@ class Translator(ABC):
     @abstractmethod
     def run(self):
         """
-        Runs code.
+        Runs code and returns process.
 
-        Returns dict with `status` key. If `status` is `True`, then code
-        executed without any errors. In that case output is in the `output` key.
-
-        If `status` is `False`, then code executed with some error. Error is in
-        the `error` key.
-
-        :return: dict
+        :return: Popen
         """
 
     def save(self) -> bool:
