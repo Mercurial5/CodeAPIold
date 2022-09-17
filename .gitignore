@@ -1,5 +1,6 @@
 venv
 temp
 .idea
+.env
 
 main.py
