@@ -2,9 +2,9 @@ from utils.exceptions import SecurityError
 from utils.Executor import Executor
 
 
-def check(code: str, io: list):
+def check(code: str, lang: str, io: list):
     try:
-        executor = Executor('py', code)
+        executor = Executor(lang, code)
     except SecurityError as e:
         return dict(status=False, reason=str(e))
 
