@@ -27,7 +27,6 @@ class Translator(ABC):
         self.filename = uuid4().hex
 
         self.code = code
-        self.is_secure = False
 
         self.base_directory = os.path.join(os.getcwd(), 'temp')
         if not os.path.exists(self.base_directory):
@@ -39,20 +38,6 @@ class Translator(ABC):
 
         filename = f'{self.filename}.{self.extension}'
         self.path_to_file = os.path.join(self.language_directory, filename)
-
-    @abstractmethod
-    def check_security(self):
-        """
-        Checks if code is secure. If it is, changes `is_secure` to True.
-
-        Returns dict with `status` key. If `status` is `True`, then code
-        is secure.
-
-        If `status` is `False`, then code is not secure, and reason is
-        written in the `reason` key.
-
-        :return: dict
-        """
 
     @abstractmethod
     def run(self):

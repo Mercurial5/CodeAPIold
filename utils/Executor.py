@@ -1,7 +1,6 @@
 from subprocess import TimeoutExpired
 
 from translator import Python
-from utils import SecurityError
 
 
 class Executor:
@@ -15,11 +14,6 @@ class Executor:
             self.translator = Python(code)
         else:
             raise ValueError(f'Language {lang} not found')
-
-        self.translator.check_security()
-
-        if not self.translator.is_secure:
-            raise SecurityError('Code is not secure')
 
         self.translator.save()
 
