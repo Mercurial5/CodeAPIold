@@ -1,4 +1,6 @@
+from utils.Docker import Docker
 from utils.Executor import Executor
+
 
 
 def check(code: str, lang: str, io: list):

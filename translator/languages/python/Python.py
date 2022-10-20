@@ -13,9 +13,3 @@ class Python(Interpreter):
         :param code: str
         """
         super().__init__('python', 'py', code)
-
-    def run(self) -> Popen:
-        commands = [sys.executable, self.path_to_file]
-        process = Popen(commands, stderr=PIPE, stdin=PIPE, stdout=PIPE)
-
-        return process

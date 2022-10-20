@@ -1,6 +1,6 @@
-from subprocess import TimeoutExpired
-
 from translator import Python
+
+from utils import Docker
 
 
 class Executor:
@@ -17,22 +17,13 @@ class Executor:
 
         self.translator.save()
 
-    def run(self, input_data: str):
-        process = self.translator.run()
+    def run(self, input_data: list) -> tuple:
+        docker = Docker(self.lang)
+        docker.start_container()
+        input_data = '\n'.join(input_data).encode('utf-8')
+        response = docker.run(self.translator.filename + '.py', input_data)
 
-        try:
-            response = process.communicate(input_data.encode('utf-8'), self.timeout)
-        except TimeoutExpired:
-            return dict(status=False, reason='Timeout')
-
-        stdout, stderr = response[0].decode('utf-8'), response[1].decode('utf-8')
-
-        if stderr:
-            return dict(status=False, reason='Runtime Error', log=stderr)
-
-        return dict(status=True, result=stdout)
+        return response
 
     def __del__(self):
         self.translator.delete()
-
-

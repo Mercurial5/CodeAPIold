@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/run', methods=['POST'])
 def run():
-    data = request.get_json()
+    data = request.form
     code = data.get('code', None)
     lang = data.get('lang', None)
     io = data.get('io', None)
@@ -18,7 +18,10 @@ def run():
     if None in [code, lang, io]:
         return dict(status=False, reason='Not all data was given')
 
-    return check(code, lang, io)
+    input = ['5']
+    output = ['10']
+
+    return check(code, lang, input, output)
 
 
 if __name__ == '__main__':

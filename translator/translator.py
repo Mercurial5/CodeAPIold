@@ -39,14 +39,6 @@ class Translator(ABC):
         filename = f'{self.filename}.{self.extension}'
         self.path_to_file = os.path.join(self.language_directory, filename)
 
-    @abstractmethod
-    def run(self):
-        """
-        Runs code and returns process.
-
-        :return: Popen
-        """
-
     def save(self) -> bool:
         """
         Saves code into file.
@@ -58,9 +50,6 @@ class Translator(ABC):
 
         :return: bool
         """
-
-        if not self.is_secure:
-            return False
 
         with open(self.path_to_file, 'w') as file:
             file.write(self.code)
