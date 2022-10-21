@@ -30,16 +30,14 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
         stdout.pop(-1)
         return dict(status=False, reason='Runtime error', description=stderr, case=len(stdout))
 
-    # Need to return answers splitter character
-    stdout = stdout.split('\n')
+    stdout = {idx: ele for idx, ele in
+           enumerate(stdout.split('TestCase\n'))}
 
-    for i in range(len(output)):
-        if i >= len(stdout):
-            return dict(status=False, reason='Few outputs', case=i + 1)
-
-        if stdout[i] != output[i]:
-            print(stdout[i], output[i])
-            return dict(status=False, reason='Wrong answer', case=i + 1)
+    for j in range(len(o)):
+        if j >= len(o):
+            return dict(status=False, reason='Few outputs', case=j + 1)
+        if stdout.get(j) != o[j]:
+            return dict(status=False, reason='Wrong answer', case=j + 1)
 
     return dict(status=True, reason='Accepted')
 
