@@ -24,8 +24,11 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
         return dict(status=False, reason='Server IOError')
 
     if stderr:
-        # Need to return the test index
-        return dict(status=False, reason='Runtime error', description=stderr) #, case=i)
+        if command is not None:
+            return dict(status=False, reason='Docker error', description=stderr, command=command)
+        stdout = stdout.split('TestCase\n')
+        stdout.pop(-1)
+        return dict(status=False, reason='Runtime error', description=stderr, case=len(stdout))
 
     # Need to return answers splitter character
     stdout = stdout.split('\n')
