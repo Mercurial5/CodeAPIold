@@ -2,8 +2,18 @@ from utils.Docker import Docker
 from utils.Executor import Executor
 
 
-def check(code: str, lang: str, input: list, output: list):
-    executor = Executor(lang, code)
+def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple_count: str):
+    try:
+        io_count = int(io_count)
+        io_tuple_count = int(io_tuple_count)
+    except ValueError:
+        return dict(status=False, reason='ValueError', description='->' + io_count + ' ' + io_tuple_count + '<- is not an integer value!')
+
+    executor = Executor(lang, code, 100, io_count)
+
+    i, o = executor.parse_io(input, output)
+
+    stdout, stderr, command = executor.run(i)
 
     stdout, stderr = executor.run(input)
 
