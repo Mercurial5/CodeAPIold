@@ -26,7 +26,7 @@ class Docker:
         process = Popen(command, shell=True, stdout=PIPE)
         self.container_id = process.stdout.read().decode('utf-8').strip()
 
-    def run(self, filename: str, input_data: bytes) -> tuple:
+    def run(self, filename: str, input_data: bytes, timeout: int = 2) -> tuple:
         """
         :param container_id: str
         :param filename: str
@@ -45,8 +45,11 @@ class Docker:
 
         process = Popen(command, shell=True, stderr=PIPE, stdin=PIPE, stdout=PIPE)
 
-        response = process.communicate(input_data)
+        response = process.communicate(input_data, timeout)
 
         stdout, stderr = response[0].decode('utf-8'), response[1].decode('utf-8')
 
-        return stdout, stderr
+        if 'python' in stderr:
+            return stdout, stderr, process.args
+
+        return stdout, stderr, None
