@@ -15,7 +15,13 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
 
     stdout, stderr, command = executor.run(i)
 
-    stdout, stderr = executor.run(input)
+    if stderr == 1:
+        return dict(status=False, reason='Input timeout')
+
+    if None in [stdout]:
+        return dict(status=False, reason='IOError')
+    if None in [i, o]:
+        return dict(status=False, reason='Server IOError')
 
     if stderr:
         # Need to return the test index
