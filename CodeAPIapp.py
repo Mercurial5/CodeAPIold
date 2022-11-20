@@ -13,15 +13,15 @@ def run():
     data = request.form
     code = data.get('code', None)
     lang = data.get('lang', None)
-    io = data.get('io', None)
+    input = data.get('input', None)
+    output = data.get('output', None)
+    io_count = data.get('io_count', None)
+    io_tuple_count = data.get('io_tuple_count', None)
 
-    if None in [code, lang, io]:
+    if None in [code, lang, input, output, io_count, io_tuple_count]:
         return dict(status=False, reason='Not all data was given')
 
-    input = ['5']
-    output = ['10']
-
-    return check(code, lang, input, output)
+    return check(code, lang, input, output, io_count, io_tuple_count)
 
 
 if __name__ == '__main__':
