@@ -1,0 +1,5 @@
+FROM python
+WORKDIR /run
+RUN chmod -R 555 /run
+RUN useradd -u 8877 john
+USER john
