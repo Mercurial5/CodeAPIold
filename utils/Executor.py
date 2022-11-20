@@ -1,7 +1,7 @@
+from os.path import join
 import re
 
 from translator import Python
-
 from utils import Docker
 
 
@@ -24,7 +24,9 @@ class Executor:
         docker = Docker(self.lang)
         docker.start_container()
         input_data = '\n'.join(input_data).encode('utf-8')
-        response = docker.run(self.translator.filename + '.py', input_data, self.timeout)
+
+        code_path = 'python/' + self.translator.filename + '.py'
+        response = docker.run(code_path, input_data, self.timeout)
         return response
 
     def parse_io(self, input: str, output: str) -> tuple:
