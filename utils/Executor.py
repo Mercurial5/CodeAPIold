@@ -7,38 +7,36 @@ from utils import Docker
 
 class Executor:
 
-    def __init__(self, lang: str, code: str, timeout: int = 2, io_count: int = 0):
+    def __init__(self, lang: str, code: str, inputs_count: int = 0, with_template: bool = False):
         self.lang = lang
         self.code = code
-        self.timeout = timeout
-        self.io_count = io_count
+        self.with_template = with_template
 
         if lang == 'py':
             self.translator = Python(code)
         else:
             raise ValueError(f'Language {lang} not found')
 
-        self.translator.save(io_count)
+        self.translator.save(inputs_count, with_template)
 
-    def run(self, input_data: list) -> tuple:
-        docker = Docker(self.lang)
-        docker.start_container()
+    def run(self, docker: Docker, input_data: list) -> list | tuple:
+        if self.with_template:
+            return self.__run_with_template(docker, input_data)
+        else:
+            return self.__run(docker, input_data)
+
+    def __run(self, docker: Docker, input_data: list) -> list:
+        code_path = 'python/' + self.translator.filename + '.py'
+        responses = [docker.run(code_path, data.encode('utf-8')) for data in input_data]
+
+        return responses
+
+    def __run_with_template(self, docker: Docker, input_data: list) -> tuple:
         input_data = '\n'.join(input_data).encode('utf-8')
 
         code_path = 'python/' + self.translator.filename + '.py'
-        response = docker.run(code_path, input_data, self.timeout)
+        response = docker.run(code_path, input_data)
         return response
-
-    def parse_io(self, input: str, output: str) -> tuple:
-        i = re.split(r'(TestCase\n)', input)
-        i.pop(0)
-        i = list(filter(('TestCase\n').__ne__, i))
-
-        o = re.split(r'(TestCase\n)', output)
-        o.pop(0)
-        o = list(filter(('TestCase\n').__ne__, o))
-
-        return i, o
 
     def __del__(self):
         self.translator.delete()

@@ -10,6 +10,3 @@ for _ in range(%s):
     %s
 
     print('TestCase')
-    i += 1
-    if i == 0:
-        1 / 0

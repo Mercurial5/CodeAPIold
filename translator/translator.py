@@ -40,7 +40,7 @@ class Translator(ABC):
         filename = f'{self.filename}.{self.extension}'
         self.path_to_file = os.path.join(self.language_directory, filename)
 
-    def save(self, io_count: int) -> bool:
+    def save(self, inputs_count: int, with_template: bool) -> bool:
         """
         Saves code into file.
 
@@ -54,8 +54,10 @@ class Translator(ABC):
 
         with open(self.path_to_file, 'w') as file:
             temp = open(self.language_directory + '\\template.py', 'r')
-            code = temp.read().strip() % (io_count, '    '.join(self.code.splitlines(True)))
-            file.write(code)
+            if with_template:
+                self.code = temp.read().strip() % (inputs_count, '    '.join(self.code.splitlines(True)))
+
+            file.write(self.code)
             temp.close()
 
         return True
