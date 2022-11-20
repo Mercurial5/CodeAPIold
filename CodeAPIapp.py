@@ -4,7 +4,6 @@ from os import getenv
 
 from utils import check
 
-
 app = Flask(__name__)
 
 
@@ -13,15 +12,13 @@ def run():
     data = request.form
     code = data.get('code', None)
     lang = data.get('lang', None)
-    input = data.get('input', None)
-    output = data.get('output', None)
-    io_count = data.get('io_count', None)
-    io_tuple_count = data.get('io_tuple_count', None)
+    inputs = data.getlist('inputs')
+    outputs = data.getlist('outputs')
 
-    if None in [code, lang, input, output, io_count, io_tuple_count]:
+    if not all([code, lang, inputs, outputs]):
         return dict(status=False, reason='Not all data was given')
 
-    return check(code, lang, input, output, io_count, io_tuple_count)
+    return check(code, lang, inputs, outputs)
 
 
 if __name__ == '__main__':
