@@ -9,7 +9,7 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
     except ValueError:
         return dict(status=False, reason='ValueError', description='->' + io_count + ' ' + io_tuple_count + '<- is not an integer value!', case="")
 
-    executor = Executor(lang, code, 100, io_count)
+    executor = Executor(lang, code, 5, io_count)
 
     i, o = executor.parse_io(input, output)
 
@@ -30,8 +30,8 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
         stdout.pop(-1)
         return dict(status=False, reason='Runtime error', description=stderr, case=len(stdout))
 
-    stdout = {idx: ele for idx, ele in
-           enumerate(stdout.split('TestCase\n'))}
+    stdout = stdout.split('\nTestCase\n')
+    stdout.pop(-1)
 
     for j in range(len(o)):
         if j >= len(o):
