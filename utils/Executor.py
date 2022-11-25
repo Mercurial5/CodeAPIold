@@ -28,13 +28,13 @@ class Executor:
         return response
 
     def parse_io(self, input: str, output: str) -> tuple:
-        i = re.split(r'(TestCase\n)', input)
-        i.pop(0)
-        i = list(filter(('TestCase\n').__ne__, i))
+        i = re.split(r'(\nTestCase\n)', input)
+        i.pop(-1)
+        i = list(filter(('\nTestCase\n').__ne__, i))
 
-        o = re.split(r'(TestCase\n)', output)
-        o.pop(0)
-        o = list(filter(('TestCase\n').__ne__, o))
+        o = re.split(r'(\nTestCase\n)', output)
+        o.pop(-1)
+        o = list(filter(('\nTestCase\n').__ne__, o))
 
         return i, o
 
