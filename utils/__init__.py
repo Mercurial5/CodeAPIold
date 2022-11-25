@@ -7,7 +7,7 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
         io_count = int(io_count)
         io_tuple_count = int(io_tuple_count)
     except ValueError:
-        return dict(status=False, reason='ValueError', description='->' + io_count + ' ' + io_tuple_count + '<- is not an integer value!')
+        return dict(status=False, reason='ValueError', description='->' + io_count + ' ' + io_tuple_count + '<- is not an integer value!', case="")
 
     executor = Executor(lang, code, 100, io_count)
 
@@ -16,16 +16,16 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
     stdout, stderr, command = executor.run(i)
 
     if stderr == 1:
-        return dict(status=False, reason='Input timeout')
+        return dict(status=False, reason='Input timeout', description="", case="")
 
     if None in [stdout]:
-        return dict(status=False, reason='IOError')
+        return dict(status=False, reason='IOError', description="", case="")
     if None in [i, o]:
-        return dict(status=False, reason='Server IOError')
+        return dict(status=False, reason='Server IOError', description="", case="")
 
     if stderr:
         if command is not None:
-            return dict(status=False, reason='Docker error', description=stderr, command=command)
+            return dict(status=False, reason='Docker error', description=stderr, command=command, case="")
         stdout = stdout.split('TestCase\n')
         stdout.pop(-1)
         return dict(status=False, reason='Runtime error', description=stderr, case=len(stdout))
@@ -35,11 +35,13 @@ def check(code: str, lang: str, input: str, output: str, io_count: str, io_tuple
 
     for j in range(len(o)):
         if j >= len(o):
-            return dict(status=False, reason='Few outputs', case=j + 1)
-        if stdout.get(j) != o[j]:
-            return dict(status=False, reason='Wrong answer', case=j + 1)
+            return dict(status=False, reason='Few outputs', description="", case=j + 1)
+        if stdout[j] != o[j]:
+            console_message = "Input data was " + i[j] + ". "
+            console_message += "Your print \"" + stdout[j] + "\" instead of \"" + o[j] + "\""
+            return dict(status=False, reason='Wrong answer', description=console_message, case=j + 1)
 
-    return dict(status=True, reason='Accepted')
+    return dict(status=True, reason='Accepted', description="", case="")
 
 
 """
