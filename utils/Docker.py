@@ -53,3 +53,7 @@ class Docker:
             return stdout, stderr, process.args
 
         return stdout, stderr, None
+
+    def __del__(self):
+        command = f'docker rm --force {self.container_id}'
+        process = Popen(command, shell=True, stderr=PIPE, stdin=PIPE, stdout=PIPE)
